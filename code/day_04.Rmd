@@ -1,0 +1,83 @@
+---
+title: "Day 04"
+author: "Lizzie"
+date: "2022-12-04"
+knit: resrepo::knit_to_results
+output:
+  github_document:
+    toc: yes
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Day 4: camp cleanup
+
+### Part 1
+
+The first range of numbers is the section that elf 2 is doing; the second is elf 2. We're interested in the overlaps - where both elves have been told to clean the same section of the camp.
+
+Aim: in how many pairs does one fully contain the other?
+
+```{r}
+
+input <- readLines("../data/day_04.txt")
+
+get_vectors <- function(t) {
+  t_exp <- unlist(strsplit(t, ","))
+  t_exp <- gsub("-", ":", t_exp)
+  t_exp <- paste("c(", t_exp, ")", sep="")
+  
+  v1 <- eval(parse(text = t_exp[1]))
+  v2 <- eval(parse(text = t_exp[2]))
+  
+  return(list(v1, v2))
+}
+
+input[1]
+get_vectors(input[1])
+
+## how many where one fully contains the other?
+tot <- 0
+for (i in 1:length(input)) {
+  # i <- 1  # testing
+  v1 <- get_vectors(input[i])[[1]]
+  v2 <- get_vectors(input[i])[[2]]
+  ## does one fully contain the other?
+  if(length(intersect(v1, v2)) == length(v1) | length(intersect(v1, v2)) == length(v2)) {
+    tot <- tot + 1
+  }
+}
+
+tot
+
+```
+
+### Part 2
+
+Aim: in how many pairs is there any intersection at all?
+
+```{r}
+
+## how many where they intersect at all?
+tot <- 0
+for (i in 1:length(input)) {
+  # i <- 1  # testing
+  v1 <- get_vectors(input[i])[[1]]
+  v2 <- get_vectors(input[i])[[2]]
+  ## does one fully contain the other?
+  if(length(intersect(v1, v2)) > 0) {
+    tot <- tot + 1
+  }
+}
+
+tot
+
+```
+
+End.
+
