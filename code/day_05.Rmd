@@ -1,0 +1,162 @@
+---
+title: "Day 05"
+author: "Lizzie"
+date: "2022-12-05"
+knit: resrepo::knit_to_results
+output:
+  github_document:
+    toc: yes
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Day 5: supply stacks
+
+### Part 1
+
+Write an algorithm to follow the instructions, moving a certain number of crates (letters) from the top of one stack (end of one vector) to the top (end) of another.
+
+Crates are moved one at a time.
+
+Aim: what crates end up on top of each stack?
+
+```{r}
+
+## read data ----
+# stacks <- readLines("../data/day_05.txt", n=9)
+## NB. the stacks are reversed, so the top of each stack is the start of the vectors
+stacks <- list(rev(c("N","R","G","P")),
+               rev(c("J","T","B","L","F","G","D","C")),
+               rev(c("M","S","V")),
+               rev(c("L","S","R","C","Z","P")),
+               rev(c("P","S","L","V","C","W","D","Q")),
+               rev(c("C","T","N","W","D","M","S")),
+               rev(c("H","D","G","W","P")),
+               rev(c("Z","L","P","H","S","C","M","V")),
+               rev(c("R","P","F","L","W","G","Z"))
+               )
+
+## TEST DATA
+# stacks <- list(c("N","Z"),
+#                c("D","C","M"),
+#                c("P"))
+# moves <- c("move 1 from 2 to 1",
+#            "move 3 from 1 to 3",
+#            "move 2 from 2 to 1",
+#            "move 1 from 1 to 2")
+
+## how to index in the list
+stacks[[1]][1:2]
+
+## write and run algorithm ----
+moves <- readLines("../data/day_05.txt")
+moves <- moves[11:length(moves)]
+
+stacks  # state at start
+
+for (i in 1:length(moves)) {
+  # i <- 1
+  ## parse the instructions
+  move <- moves[i]
+  ## find the numbers
+  move_n <- unlist(strsplit(move, "move | from | to "))
+  move_n <- as.numeric(move_n[which(move_n != "")])
+  n   <- move_n[1]  # how many to move
+  sta <- move_n[2]  # from this stack
+  end <- move_n[3]  # to this stack
+  
+  ## move j crates
+  for (j in 1:n) {
+    ## add the moved crate to the end stack
+    # stacks[[sta]][1]  # the crate to move
+    stacks[[end]] <- c(stacks[[sta]][1] , stacks[[end]])
+    
+    ## take away the moved crate from the start stack
+    stacks[[sta]] <- stacks[[sta]][-1]
+  }
+  
+  # cat("after step", i, "\n")
+  # print(stacks)
+  # cat("\n")
+}
+
+stacks  # state at end
+
+### get answer ----
+
+## concatenate the first letter in every stack
+ans <- c()
+for (i in 1:9) {
+  ans <- c(ans, stacks[[i]][1])
+}
+
+paste(ans, collapse = "")
+
+```
+
+### Part 2
+
+Crates are now moved as a block instead of one at a time. (*i.e. the way I wrote this code the first time round because I didn't read the question properly.*)
+
+Aim: what crates end up on top of each stack now?
+
+```{r}
+
+stacks <- list(rev(c("N","R","G","P")),
+               rev(c("J","T","B","L","F","G","D","C")),
+               rev(c("M","S","V")),
+               rev(c("L","S","R","C","Z","P")),
+               rev(c("P","S","L","V","C","W","D","Q")),
+               rev(c("C","T","N","W","D","M","S")),
+               rev(c("H","D","G","W","P")),
+               rev(c("Z","L","P","H","S","C","M","V")),
+               rev(c("R","P","F","L","W","G","Z"))
+               )
+
+stacks  # state at start
+
+for (i in 1:length(moves)) {
+  # i <- 1
+  ## parse the instructions
+  move <- moves[i]
+  ## find the numbers
+  move_n <- unlist(strsplit(move, "move | from | to "))
+  move_n <- as.numeric(move_n[which(move_n != "")])
+  n   <- move_n[1]  # how many to move
+  sta <- move_n[2]  # from this stack
+  end <- move_n[3]  # to this stack
+  
+  ## add the moved crate to the end stack
+  # stacks[[sta]][1:n]  # the crate to move
+  stacks[[end]] <- c(stacks[[sta]][1:n] , stacks[[end]])
+  
+  ## take away the moved crate from the start stack
+  stacks[[sta]] <- stacks[[sta]][-c(1:n)]
+  
+  # cat("after step", i, "\n")
+  # print(stacks)
+  # cat("\n")
+}
+
+stacks  # state at end
+
+### get answer ----
+
+## concatenate the first letter in every stack
+ans <- c()
+for (i in 1:9) {
+  ans <- c(ans, stacks[[i]][1])
+}
+
+paste(ans, collapse = "")
+
+```
+
+
+End.
+
