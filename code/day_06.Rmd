@@ -1,0 +1,19 @@
+---
+title: "Day 06"
+author: "Lizzie"
+date: "2022-12-05"
+knit: resrepo::knit_to_results
+output:
+  github_document:
+    toc: yes
+    toc_depth: 4
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Day 6: not yet done.
+
